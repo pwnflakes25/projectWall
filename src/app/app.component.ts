@@ -59,15 +59,50 @@ openCanvas() {
 
 
 drawFrame(video) {
+  let fps = 45;
+  let begin = Date.now();
   this.context.drawImage(video, 0, 0);
   var imageData = this.context.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.applyContrast(imageData.data, 20);
   this.changeWhiteToYellow(imageData.data);
+  this.applyContrast(imageData.data, 1);
   this.context.putImageData(imageData, 0, 0);
 
+
+   let delay = 1000/fps- (Date.now() - begin);
   setTimeout(() => {
    this.drawFrame(video);
- }, 10);
+ }, delay);
 }
+
+ applyBrightness(data, brightness) {
+  for (var i = 0; i < data.length; i+= 4) {
+    data[i] += 255 * (brightness / 100);
+    data[i+1] += 255 * (brightness / 100);
+    data[i+2] += 255 * (brightness / 100);
+  }
+}
+
+truncateColor(value) {
+  if (value < 0) {
+    value = 0;
+  } else if (value > 255) {
+    value = 255;
+  }
+
+  return value;
+}
+
+ applyContrast(data, contrast) {
+  var factor = (259.0 * (contrast + 255.0)) / (255.0 * (259.0 - contrast));
+
+  for (var i = 0; i < data.length; i+= 4) {
+    data[i] = this.truncateColor(factor * (data[i] - 128.0) + 128.0);
+    data[i+1] = this.truncateColor(factor * (data[i+1] - 128.0) + 128.0);
+    data[i+2] = this.truncateColor(factor * (data[i+2] - 128.0) + 128.0);
+  }
+}
+
 
 
 changeWhiteToYellow(data) {
@@ -79,13 +114,12 @@ changeWhiteToYellow(data) {
   for (let i = 0; i < data.length; i += 4)
   {
     red[i] = data[i];
-    if (red[i] <= 255 && red[i] >= 140 ) red[i] = 255;
+    if (red[i] <= 255 && red[i] >= 170 ) red[i] = 255;
     green[i] = data[i+1];
-    if (green[i] <= 255 && green[i] >= 140) green[i] = 255;
+    if (green[i] <= 255 && green[i] >= 170) green[i] = 255;
     blue[i] = data[i+2];
-    if (blue[i] <= 255 && blue[i] >= 140) blue[i] = 0;
-    alpha[i] = data[i+3];
-    if (alpha[i] <= 1) alpha[i] = 1;
+    if (blue[i] <= 255 && blue[i] >= 170) blue[i] = 0;
+    alpha[i] = 255;
   }
 
   // Write the image back to the canvas
@@ -99,14 +133,7 @@ changeWhiteToYellow(data) {
 }
 
 
- //  this.applyGrayscale(data);
- //
- //  for (var i = 0; i < data.length; i += 4) {
- //   data[i] = gradientColors[data[i]].r;
- //   data[i+1] = gradientColors[data[i+1]].g;
- //   data[i+2] = gradientColors[data[i+2]].b;
- //   data[i+3] = 255;
- // }
+
 
 
 stringToHex(string: string) {
