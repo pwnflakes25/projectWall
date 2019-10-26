@@ -99,6 +99,10 @@ onColorChange(color) {
   console.log(this.finalColor);
 }
 
+getFinalColor() {
+  return this.finalColor;
+}
+
 
 
 //this function draws the canvas consistently redrawing the video
@@ -113,18 +117,17 @@ drawFrame() {
   // this.applyContrast(imageData.data, 1);
 
   this.canvas.nativeElement.addEventListener('click', (e) => {
+    console.log(this.finalColor);
     this.getInitialColor(e, imageData.data);
     this.initialColorAvailable = true;
   })
-
   if(this.initialColorAvailable) {
     this.applyContrast(imageData.data, 20);
-    this.changeFromColortoColor(imageData.data, this.initialColor, this.finalColor, 30);
+    // this.changeFromColortoColor(imageData.data, this.initialColor, this.finalColor, 30);
+    this.cutAlphaOfColor(imageData.data, 60);
     this.applyContrast(imageData.data, 1);
   }
-
   this.context.putImageData(imageData, 0, 0);
-
  //this function below loops the drawFrame function
  requestAnimationFrame(this.drawFrame.bind(this));
 }
@@ -137,7 +140,6 @@ drawFrame() {
     data[i+2] += 255 * (brightness / 100);
   }
 }
-
 
 //this function guard RGB to be within 255 range
 truncateColor(value) {
@@ -187,6 +189,26 @@ changeFromColortoColor(data, color1, color2, range) {
     data[i+2] = blue[i];
     data[i+3] = alpha[i];
   }
+}
+
+ cutAlphaOfColor(data, range) {
+   const color = this.initialColor;
+   let red = new Array();
+   let green = new Array();
+   let blue = new Array();
+   let alpha = new Array();
+
+   for (let i = 0; i < data.length; i+=4) {
+      red[i] = data[i];
+      green[i] = data[i+1];
+      blue[i] = data[i+2];
+      alpha[i] = data[i+3];
+      if (red[i] <= color.r + range && red[i] >= color.r - range
+         && green[i] <= color.g + range && green[i] >= color.g - range
+         && blue[i] <= color.b + range && blue[i] >= color.b - range) {
+           data[i+3] = 30;
+         }
+    }
 }
 
 
