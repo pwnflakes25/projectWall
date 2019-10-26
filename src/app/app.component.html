@@ -1,13 +1,18 @@
 
 <div class="">
   <button type="button" name="button" (click)="openVideo()">Open</button>
-  <button type="button" name="button">Close</button>
+  <button type="button" name="button" (click)="stopVideo()">Close</button>
+  <button type="button" name="button" (click)="resetInitialColor()">Reset</button>
   <button type="button" name="button" (click)="openCanvas()">openCanvas</button>
   <div class="vid">
     <video #video autoplay style="max-width: 100%; background: #ccc;" width="640" height="480"></video>
   </div>
   <div class="">
-      <canvas #myCanvas id="canvas" style="max-width: 100%; background: #ccc;" width="640" height="480"></canvas>
+      <canvas #myCanvas id="canvas" style="max-width: 100%; background: #ccc; " width="640" height="480"></canvas>
+  </div>
+  <div class="inputs">
+    <p>To Color: <span><input #finalColor type="color" name="" (input)="onColorChange(finalColor.value)"></span></p>
+    <input type="color" name="" [value]="finalColorHex">
   </div>
 </div>
 <router-outlet></router-outlet>
