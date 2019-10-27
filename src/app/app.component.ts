@@ -112,9 +112,7 @@ drawFrame() {
   const vid = this.video.nativeElement;
   this.context.drawImage(vid, 0, 0)
   var imageData = this.context.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-  // this.applyContrast(imageData.data, 20);
-  // this.changeWhiteToYellow(imageData.data);
-  // this.applyContrast(imageData.data, 1);
+
 
   this.canvas.nativeElement.addEventListener('click', (e) => {
     console.log(this.finalColor);
@@ -124,8 +122,7 @@ drawFrame() {
   if(this.initialColorAvailable) {
     this.applyContrast(imageData.data, 20);
     // this.changeFromColortoColor(imageData.data, this.initialColor, this.finalColor, 30);
-    this.cutAlphaOfColor(imageData.data, 60);
-    this.applyContrast(imageData.data, 1);
+    this.cutAlphaOfColor(imageData.data, 45);
   }
   this.context.putImageData(imageData, 0, 0);
  //this function below loops the drawFrame function
@@ -159,6 +156,14 @@ truncateColor(value) {
     data[i] = this.truncateColor(factor * (data[i] - 128.0) + 128.0);
     data[i+1] = this.truncateColor(factor * (data[i+1] - 128.0) + 128.0);
     data[i+2] = this.truncateColor(factor * (data[i+2] - 128.0) + 128.0);
+  }
+}
+
+ApplyInvertColor(data) {
+  for (var i = 0; i < data.length; i+= 4) {
+    data[i] = data[i] ^ 255; // Invert Red
+    data[i+1] = data[i+1] ^ 255; // Invert Green
+    data[i+2] = data[i+2] ^ 255; // Invert Blue
   }
 }
 
@@ -206,40 +211,62 @@ changeFromColortoColor(data, color1, color2, range) {
       if (red[i] <= color.r + range && red[i] >= color.r - range
          && green[i] <= color.g + range && green[i] >= color.g - range
          && blue[i] <= color.b + range && blue[i] >= color.b - range) {
-           data[i+3] = 30;
+           data[i+3] = 0;
          }
     }
 }
 
+// cutAlphaOfColorWithHSV(data) {
+//   const color = this.rgbTohsv(this.initialColor.r, this.initialColor.g, this.initialColor.b);
+//   let red = new Array();
+//   let green = new Array();
+//   let blue = new Array();
+//   let alpha = new Array();
+//   let hsv;
+//
+//
+//   for (let i = 0; i < data.length; i+=4) {
+//   red[i] = data[i];
+//   green[i] = data[i+1];
+//   blue[i] = data[i+2];
+//   hsv = this.rgbTohsv(red[i], green[i], blue[i]);
+//   let hueDifference = Math.abs(hsv.h - color.h);
+//   let vDifference = Math.abs(hsv.v - color.v);
+//   let sDifference = Math.abs(hsv.s - color.s);
+//   if( hueDifference < 20 && vDifference <= 30 && vDifference >= 10 && sDifference <= 20) {
+//         data[i+3] = 0;
+//   }
+//  }
+// }
 
 
 //first test function
-changeWhiteToYellow(data) {
-  let red = new Array();
-  let green = new Array();
-  let blue = new Array();
-  let alpha = new Array();
-
-  for (let i = 0; i < data.length; i += 4)
-  {
-    red[i] = data[i];
-    if (red[i] <= 255 && red[i] >= 170 ) red[i] = 255;
-    green[i] = data[i+1];
-    if (green[i] <= 255 && green[i] >= 170) green[i] = 255;
-    blue[i] = data[i+2];
-    if (blue[i] <= 255 && blue[i] >= 170) blue[i] = 0;
-    alpha[i] = 255;
-  }
-
-  // Write the image back to the canvas
-  for (let i = 0; i < data.length; i += 4)
-  {
-    data[i] = red[i];
-    data[i+1] = green[i];
-    data[i+2] = blue[i];
-    data[i+3] = alpha[i];
-  }
-}
+// changeWhiteToYellow(data) {
+//   let red = new Array();
+//   let green = new Array();
+//   let blue = new Array();
+//   let alpha = new Array();
+//
+//   for (let i = 0; i < data.length; i += 4)
+//   {
+//     red[i] = data[i];
+//     if (red[i] <= 255 && red[i] >= 170 ) red[i] = 255;
+//     green[i] = data[i+1];
+//     if (green[i] <= 255 && green[i] >= 170) green[i] = 255;
+//     blue[i] = data[i+2];
+//     if (blue[i] <= 255 && blue[i] >= 170) blue[i] = 0;
+//     alpha[i] = 255;
+//   }
+//
+//   // Write the image back to the canvas
+//   for (let i = 0; i < data.length; i += 4)
+//   {
+//     data[i] = red[i];
+//     data[i+1] = green[i];
+//     data[i+2] = blue[i];
+//     data[i+3] = alpha[i];
+//   }
+// }
 
 //Two function belows change RGB To Hex
 componentToHex(c) {
@@ -249,6 +276,43 @@ componentToHex(c) {
 
 rgbToHex(r, g, b) {
   return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+}
+
+rgbTohsv (r, g, b) {
+    let rabs, gabs, babs, rr, gg, bb, h, s, v, diff, diffc, percentRoundFn;
+    rabs = r / 255;
+    gabs = g / 255;
+    babs = b / 255;
+    v = Math.max(rabs, gabs, babs),
+    diff = v - Math.min(rabs, gabs, babs);
+    diffc = c => (v - c) / 6 / diff + 1 / 2;
+    percentRoundFn = num => Math.round(num * 100) / 100;
+    if (diff == 0) {
+        h = s = 0;
+    } else {
+        s = diff / v;
+        rr = diffc(rabs);
+        gg = diffc(gabs);
+        bb = diffc(babs);
+
+        if (rabs === v) {
+            h = bb - gg;
+        } else if (gabs === v) {
+            h = (1 / 3) + rr - bb;
+        } else if (babs === v) {
+            h = (2 / 3) + gg - rr;
+        }
+        if (h < 0) {
+            h += 1;
+        }else if (h > 1) {
+            h -= 1;
+        }
+    }
+    return {
+        h: Math.round(h * 360),
+        s: percentRoundFn(s * 100),
+        v: percentRoundFn(v * 100)
+    };
 }
 
 // createGradient(fromHex, toHex) {
