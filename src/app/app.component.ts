@@ -115,7 +115,7 @@ drawFrame() {
   let begin = Date.now();
   const vid = this.video.nativeElement;
   this.context.drawImage(vid, 0, 0)
-  var imageData = this.context.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  let imageData = this.context.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
 
   this.canvas.nativeElement.addEventListener('click', (e) => {
@@ -198,25 +198,25 @@ ApplyInvertColor(data) {
 //   }
 // }
 
- cutAlphaOfColor(data, range) {
-   const color = this.initialColor;
-   let red = new Array();
-   let green = new Array();
-   let blue = new Array();
-   let alpha = new Array();
-
-   for (let i = 0; i < data.length; i+=4) {
-      red[i] = data[i];
-      green[i] = data[i+1];
-      blue[i] = data[i+2];
-      alpha[i] = data[i+3];
-      if (red[i] <= color.r + range && red[i] >= color.r - range
-         && green[i] <= color.g + range && green[i] >= color.g - range
-         && blue[i] <= color.b + range && blue[i] >= color.b - range) {
-           data[i+3] = 0 ;
-         }
-    }
-}
+//  cutAlphaOfColor(data, range) {
+//    const color = this.initialColor;
+//    let red = new Array();
+//    let green = new Array();
+//    let blue = new Array();
+//    let alpha = new Array();
+//
+//    for (let i = 0; i < data.length; i+=4) {
+//       red[i] = data[i];
+//       green[i] = data[i+1];
+//       blue[i] = data[i+2];
+//       alpha[i] = data[i+3];
+//       if (red[i] <= color.r + range && red[i] >= color.r - range
+//          && green[i] <= color.g + range && green[i] >= color.g - range
+//          && blue[i] <= color.b + range && blue[i] >= color.b - range) {
+//            data[i+3] = 100 ;
+//          }
+//     }
+// }
 
 cutAlphaOfColorWithLAB(data) {
   const color = this.initialColor;
@@ -233,8 +233,8 @@ cutAlphaOfColorWithLAB(data) {
      }
      secondLAB = this.rgb2lab(color2);
      deltaEValue = this.deltaE(firstLAB, secondLAB);
-     if (deltaEValue <= 15) {
-       data[i+3] = 0;
+     if (deltaEValue <= 13) {
+       data[i+3] -= 100;
      }
   }
 }
