@@ -9,11 +9,11 @@
     <input type="color" name="" [value]="finalColorHex">
   </div>
   <div class="vid">
-    <video #video autoplay style="max-width: 100%; background: #ccc;" width="640" height="480"></video>
+    <video #video autoplay style="max-width: 100%; background: #ccc;" width="320" height="240"></video>
   </div>
   <div class="">
-      <canvas id="canvas0" style="max-width: 100%; position: absolute; z-index=0;" [style.background-color]="getFinalColor()" width="640" height="480"></canvas>
-      <canvas #myCanvas id="canvas" style="max-width: 100%; position: absolute; z-index=1;" width="640" height="480"></canvas>
+      <canvas id="canvas0" style="max-width: 100%; position: absolute; z-index=0;" [style.background-color]="getFinalColor()" width="320" height="240"></canvas>
+      <canvas #myCanvas id="canvas" style="max-width: 100%; position: absolute; z-index=1;" width="320" height="240"></canvas>
   </div>
 </div>
 <router-outlet></router-outlet>

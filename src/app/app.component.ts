@@ -12,8 +12,6 @@ export class AppComponent implements OnInit {
 
   title = 'projectWall';
   compatible: boolean;
-  fromColor: string = '#ffffff';
-  toColor: string = '#9B870C';
   gradients: {};
   context: CanvasRenderingContext2D;
   initialColor: any;
@@ -71,11 +69,13 @@ openCanvas() {
 }
 
 
-getInitialColor(event, data) {
+getInitialColor(event, data, canvas) {
+ let rect = canvas.getBoundingClientRect();
+ this.initialColor = {};
   //get mouse position
-  const mousePos = {
-  x: event.clientX,
-  y: event.clientY
+  let mousePos = {
+  x: event.clientX - rect.left,
+  y: event.clientY - rect.top
  }
 
 
@@ -110,25 +110,23 @@ getFinalColor() {
 
 //this function draws the canvas consistently redrawing the video
 drawFrame() {
+  //this function below "requestAnimationFrame" loops the drawFrame function
   requestAnimationFrame(this.drawFrame.bind(this));
-  let fps = 30;
-  let begin = Date.now();
   const vid = this.video.nativeElement;
-  this.context.drawImage(vid, 0, 0)
+  this.context.drawImage(vid, 0, 0, vid.width, vid.height)
   let imageData = this.context.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
 
   this.canvas.nativeElement.addEventListener('click', (e) => {
-    console.log(this.finalColor);
-    this.getInitialColor(e, imageData.data);
+    this.getInitialColor(e, imageData.data, this.canvas.nativeElement);
     this.initialColorAvailable = true;
   })
   if(this.initialColorAvailable) {
-    // this.applyContrast(imageData.data, 20);
+    this.applyContrast(imageData.data, 20);
     this.cutAlphaOfColorWithLAB(imageData.data);
   }
   this.context.putImageData(imageData, 0, 0);
- //this function below loops the drawFrame function
+  return;
 }
 
 //this function modify pixel to have higher brightness to canvas
@@ -233,11 +231,11 @@ cutAlphaOfColorWithLAB(data) {
      }
      secondLAB = this.rgb2lab(color2);
      deltaEValue = this.deltaE(firstLAB, secondLAB);
-     if (deltaEValue <= 13) {
+     if (deltaEValue <= 15) {
        data[i+3] -= 100;
      }
   }
-}
+ }
 
 rgb2lab(rgb){
   let r = rgb.r / 255,
