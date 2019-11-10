@@ -1,1 +1,37 @@
 
+.firstContent {
+  text-align: center;
+  padding-right: 25rem;
+  padding-top: 7rem;
+}
+
+.dot {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.secondContent{
+  text-align: center;
+  margin-top: 20rem;
+}
+
+.colorPallette{
+  margin-top: 3rem;
+}
+
+.settings {
+  position: relative;
+  margin-top: 2rem;
+}
+
+.settings button {
+  margin-right: 1rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .firstContent {
+    padding-right: 28rem;
+  }
+}

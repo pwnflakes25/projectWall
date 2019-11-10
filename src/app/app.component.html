@@ -1,19 +1,46 @@
+<!-- <div class="container-fluid mainContainer">
+  <div class="mainContent justify-content-center">
+        <button type="button" name="button" (click)="openVideo()">Open</button>
+        <button type="button" name="button" (click)="stopVideo()">Close</button>
+        <button type="button" name="button" (click)="resetCanvas()">Reset</button>
+        <button type="button" name="button" (click)="openCanvas()">openCanvas</button>
+        <div class="inputs">
 
-<div class="">
-  <button type="button" name="button" (click)="openVideo()">Open</button>
-  <button type="button" name="button" (click)="stopVideo()">Close</button>
-  <button type="button" name="button" (click)="resetCanvas()">Reset</button>
-  <button type="button" name="button" (click)="openCanvas()">openCanvas</button>
-  <div class="inputs">
-    <p>To Color: <span><input #finalColor type="color" name="" (input)="onColorChange(finalColor.value)"></span></p>
-    <input type="color" name="" [value]="finalColorHex">
+        </div>
+        <div class="vid">
+          <video #video autoplay style="max-width: 100%; display:none;" width="320" height="240"></video>
+        </div>
+        <div class="">
+            <canvas id="canvas0" style="max-width: 100%; position: absolute; z-index=0;" [style.background-color]="getFinalColor()" width="320" height="240"></canvas>
+            <canvas #myCanvas id="canvas" style="max-width: 100%; position: absolute; z-index=1;" width="320" height="240"></canvas>
+        </div>
   </div>
-  <div class="vid">
-    <video #video autoplay style="max-width: 100%; background: #ccc;" width="320" height="240"></video>
-  </div>
-  <div class="">
-      <canvas id="canvas0" style="max-width: 100%; position: absolute; z-index=0;" [style.background-color]="getFinalColor()" width="320" height="240"></canvas>
-      <canvas #myCanvas id="canvas" style="max-width: 100%; position: absolute; z-index=1;" width="320" height="240"></canvas>
-  </div>
+</div> -->
+
+<div class="container">
+
+    <div class="row firstContent ">
+        <div class="">
+          <video #video autoplay style="max-width: 100%; display:none;" width="450" height="300"></video>
+          <canvas id="canvas0" style="max-width: 100%; position: absolute; z-index=0;" [style.background-color]="getFinalColor()" width="450" height="300"></canvas>
+          <canvas #myCanvas id="canvas" style="max-width: 100%; position: absolute; z-index=1;" width="450" height="300"></canvas>
+        </div>
+    </div>
+
+    <div class="secondContent">
+      <div class="colorPallette">
+        <p>Pick Color Below:</p>
+        <span class="dot" [style.background-color]="finalColor" (click)="colorPicker.click()"></span>
+        <span><input #colorPicker style="display:none;" type="color" name="" (input)="onColorChange(colorPicker.value)"></span>
+      </div>
+      <mat-slider min="12" max="30" step="1" [value]="sliderValue"></mat-slider>
+      <div class="settings">
+        <button mat-raised-button color="primary" type="button" name="button" (click)="openVideo()">Start</button>
+        <button mat-raised-button type="button" name="button" (click)="stopVideo()">Stop</button>
+        <button mat-raised-button type="button" name="button" (click)="resetCanvas()">Reset</button>
+      </div>
+    </div>
+
 </div>
+
 <router-outlet></router-outlet>

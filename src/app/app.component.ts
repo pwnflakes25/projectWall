@@ -7,8 +7,8 @@ import * as tracking from 'tracking';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  @ViewChild('myCanvas') canvas: ElementRef<HTMLCanvasElement>;
-  @ViewChild('video') video: ElementRef<HTMLVideoElement>;
+  @ViewChild('myCanvas',  {static: false}) canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('video',  {static: false}) video: ElementRef<HTMLVideoElement>;
 
   title = 'projectWall';
   compatible: boolean;
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   finalColorHex;
   initialColorAvailable = false;
   localStream;
+  sliderValue = 12;
 
 
 ngOnInit() {
@@ -47,6 +48,9 @@ openVideo() {
      this.video.nativeElement.srcObject = stream;
      this.localStream = stream;
    });
+   this.video.nativeElement.addEventListener('play', () => {
+     this.openCanvas();
+   })
  }
  else {
    console.log("This device does not support camera");
@@ -62,7 +66,7 @@ openCanvas() {
   if (this.video.nativeElement.readyState === 4) {
     this.canvas.nativeElement.width = this.video.nativeElement.width;
     this.canvas.nativeElement.height = this.video.nativeElement.height;
-    this.drawFrame()
+    this.drawFrame();
   } else {
     this.video.nativeElement.addEventListener('play', this.drawFrame);
   }
