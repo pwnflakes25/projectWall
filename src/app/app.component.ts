@@ -7,15 +7,16 @@ import * as tracking from 'tracking';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  @ViewChild('myCanvas',  {static: false}) canvas: ElementRef<HTMLCanvasElement>;
-  @ViewChild('video',  {static: false}) video: ElementRef<HTMLVideoElement>;
+  @ViewChild('myCanvas',  {static: true}) canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('backCanvas',  {static: true}) backCanvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('video',  {static: true}) video: ElementRef<HTMLVideoElement>;
 
   title = 'projectWall';
   compatible: boolean;
   gradients: {};
   context: CanvasRenderingContext2D;
   initialColor: any;
-  finalColor = "#FFFF00";
+  finalColor = "#3a243b";
   finalColorHex;
   initialColorAvailable = false;
   localStream;
@@ -25,6 +26,20 @@ export class AppComponent implements OnInit {
 ngOnInit() {
  this.compatible = this.hasGetUserMedia();
  this.context = this.canvas.nativeElement.getContext('2d');
+ this.getScreenRes();
+}
+
+
+getScreenRes() {
+  let w = window.screen.width;
+  console.log(w)
+  if(w <= 768) {
+    this.video.nativeElement.width = 300;
+    this.video.nativeElement.height = 450;
+  } else {
+    this.video.nativeElement.width = 450;
+    this.video.nativeElement.height = 300;
+  }
 }
 
 
@@ -66,6 +81,8 @@ openCanvas() {
   if (this.video.nativeElement.readyState === 4) {
     this.canvas.nativeElement.width = this.video.nativeElement.width;
     this.canvas.nativeElement.height = this.video.nativeElement.height;
+    this.backCanvas.nativeElement.width = this.video.nativeElement.width;
+    this.backCanvas.nativeElement.height = this.video.nativeElement.height;
     this.drawFrame();
   } else {
     this.video.nativeElement.addEventListener('play', this.drawFrame);
