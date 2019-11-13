@@ -34,8 +34,8 @@ getScreenRes() {
   let w = window.screen.width;
   console.log(w)
   if(w <= 768) {
-    this.video.nativeElement.width = 300;
-    this.video.nativeElement.height = 450;
+    this.video.nativeElement.width = 350;
+    this.video.nativeElement.height = 400;
   } else {
     this.video.nativeElement.width = 450;
     this.video.nativeElement.height = 300;

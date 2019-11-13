@@ -34,5 +34,6 @@
 @media only screen and (max-width: 768px) {
   .firstContent {
     padding-right: 28rem;
+    margin-left: 2rem;
   }
 }
