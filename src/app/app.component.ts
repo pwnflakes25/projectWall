@@ -34,7 +34,7 @@ getScreenRes() {
   let w = window.screen.width;
   console.log(w)
   if(w <= 768) {
-    this.video.nativeElement.width = 350;
+    this.video.nativeElement.width = 345;
     this.video.nativeElement.height = 350;
   } else {
     this.video.nativeElement.width = 450;
@@ -141,10 +141,11 @@ drawFrame() {
   this.canvas.nativeElement.addEventListener('click', (e) => {
     this.getInitialColor(e, imageData.data, this.canvas.nativeElement);
     this.initialColorAvailable = true;
+    console.log(this.sliderValue);
   })
   if(this.initialColorAvailable) {
     this.applyContrast(imageData.data, 20);
-    this.cutAlphaOfColorWithLAB(imageData.data);
+    this.cutAlphaOfColorWithLAB(imageData.data, this.sliderValue);
   }
   this.context.putImageData(imageData, 0, 0);
   return;
@@ -237,7 +238,7 @@ ApplyInvertColor(data) {
 //     }
 // }
 
-cutAlphaOfColorWithLAB(data) {
+cutAlphaOfColorWithLAB(data, sliderValue) {
   const color = this.initialColor;
   let color2;
   let firstLAB = this.rgb2lab(this.initialColor)
@@ -252,7 +253,7 @@ cutAlphaOfColorWithLAB(data) {
      }
      secondLAB = this.rgb2lab(color2);
      deltaEValue = this.deltaE(firstLAB, secondLAB);
-     if (deltaEValue <= 15) {
+     if (deltaEValue <= sliderValue) {
        data[i+3] -= 100;
      }
   }
